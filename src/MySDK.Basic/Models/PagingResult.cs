@@ -4,6 +4,12 @@ namespace MySDK.MongoDB.Models
 {
     public class PagingResult<T>
     {
+        public PagingResult()
+        {
+            PageIndex = 1;
+            PageSize = 25;
+        }
+
         public int PageIndex { get; set; }
 
         public int PageSize { get; set; }

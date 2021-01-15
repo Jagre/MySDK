@@ -9,4 +9,8 @@
     <PackageReference Include="MongoDB.Driver" Version="2.10.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MySDK.Basic\MySDK.Basic.csproj" />
+  </ItemGroup>
+
 </Project>
