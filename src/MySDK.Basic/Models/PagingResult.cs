@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MySDK.MongoDB.Models
+namespace MySDK.Basic.Models
 {
     public class PagingResult<T>
     {

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MySDK.Dapper.Extentions;
+using System;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace MySDK.Dapper.Extention
+namespace MySDK.Dapper
 {
     public class UpdateBuilder<TTable>
     {
@@ -11,7 +12,6 @@ namespace MySDK.Dapper.Extention
         private readonly StringBuilder _builder = new StringBuilder();
         public UpdateBuilder()
         {
-
         }
 
         public UpdateBuilder<TTable> BuildColum<TField>(Expression<Func<TTable, TField>> predicate)
@@ -40,9 +40,9 @@ namespace MySDK.Dapper.Extention
                 return string.Empty;
 
             return $@"
-                update  {typeof(TTable).Name}
-                set     {updateFields} 
-                where   {primaryKeyName} = @{primaryKeyName}";
+                UPDATE  {typeof(TTable).Name}
+                SET     {updateFields} 
+                WHERE   {primaryKeyName} = @{primaryKeyName}";
         }
 
         private static string GetPrimaryKeyFieldName()

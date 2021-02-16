@@ -1,0 +1,5 @@
+{
+  "Connections": {
+    "test": "server=192.168.56.102;database=test;uid=root;pwd=123456;charset=utf8;"
+  }
+}

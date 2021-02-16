@@ -1,8 +1,11 @@
 ﻿using Dapper.Contrib.Extensions;
-using Microsoft.Extensions.Configuration;
-using MySDK.Dapper.Sql;
+using MySDK.Configuration;
+using MySDK.Dapper.Extentions;
 using MySDK.DependencyInjection;
+using MySql.Data.MySqlClient;
 using System.Data;
+using System.Data.SqlClient;
+
 
 namespace MySDK.Dapper
 {
@@ -16,19 +19,21 @@ namespace MySDK.Dapper
             SqlMapperExtensions.TableNameMapper = (type) => type.Name;
         }
 
-        public const string MSSQL_PAGING_SCRIPT_TEMPLATE = @" 
+        /// <summary>
+        /// paging sql script template, support mssql, mysql(>=8.0, windows func),
+        /// {0}: complex sql query,
+        /// {1}: order by fields' name
+        /// {2}, {3}: the boundary value according to count by pageIndex & pageSize
+        /// </summary>
+        public const string PAGING_SQL_SCRIPT_TEMPLATE = @" 
             WITH 
                 _data AS ({0}),
                 _count AS (SELECT COUNT(0) AS OverallCount FROM _data)
 
             SELECT  *   
-            FROM    (SELECT *, ROW_NUMBER() OVER (ORDER BY {1}) AS row_num FROM _data  CROSS APPLY _count) x
-            WHERE   row_num BETWEEN {2} AND {3}
+            FROM    (SELECT *, ROW_NUMBER() OVER (ORDER BY {1}) AS Row_No FROM _data  CROSS JOIN _count) x
+            WHERE   Row_No >= {2} AND Row_No <= {3}
             ORDER BY {1}";
-
-        public const string MYSQL_PAGING_SCRIPT_TEMPLATE = @"
-            
-        ";
 
         /// <summary>
         /// get the instance of IDbConnection
@@ -38,8 +43,19 @@ namespace MySDK.Dapper
         /// <returns></returns>
         public static IDbConnection GetConnection<T>(string connectionName) where T : IDbConnection
         {
-            return MyServiceProvider.Configuration.GetConnectionString(connectionName).GetDbConnection<T>();
+            return MyServiceProvider.Configuration.GetConnectionConfig(connectionName).GetDbConnection<T>();
         }
 
+        public static IDbConnection GetSqlConnection(string connectionName)
+        {
+            return GetConnection<SqlConnection>(connectionName);
+        }
+
+        public static IDbConnection GetMySqlConnection(string connectionName)
+        {
+            return GetConnection<MySqlConnection>(connectionName);
+        }
+
+        
     }
 }

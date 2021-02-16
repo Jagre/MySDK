@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
-using Microsoft.Extensions.Configuration;
-using MySDK.Dapper.Extention;
+using MySDK.Dapper.Extentions;
 using MySDK.Dapper.Sql;
 using System;
 using System.Collections.Generic;
@@ -12,37 +11,15 @@ using System.Threading.Tasks;
 
 namespace MySDK.Dapper
 {
-    public class SqlDapperRepository<TTable, TKey> : DapperContext<SqlConnection>, IDapperRepository<TTable, TKey>, IDisposable
+    public class SqlDapperRepository<TTable, TKey> : DapperRepositoryBase<SqlConnection>, IDapperRepository<TTable, TKey>, IDisposable
         where TTable : class
         where TKey : struct
     {
         private readonly string _connectionString;
 
-        public SqlDapperRepository(string connectionString)
+        public SqlDapperRepository(string connectionName)
+           : base(connectionName)
         {
-            _connectionString = connectionString;
-        }
-
-        public SqlDapperRepository(IConfigurationRoot config, string connectionName)
-        {
-            _connectionString = config.GetConnectionString(connectionName);
-        }
-
-        private IDbConnection _conn;
-        public IDbConnection Connection
-        {
-            get
-            {
-                if (_conn == null)
-                {
-                    _conn = base.GetDbConnection(_connectionString);
-                }
-                if (_conn.State != ConnectionState.Open)
-                {
-                    _conn.Open();
-                }
-                return _conn;
-            }
         }
 
         public async Task<bool> DeleteAsync(TTable entity, IDbTransaction tran = null)
@@ -57,7 +34,7 @@ namespace MySDK.Dapper
 
         public async Task<bool> DeleteAsync(string whereAfterQueryString, object param = null, IDbTransaction tran = null)
         {
-            return await Connection.ExecuteAsync($"delete {typeof(TTable).Name} with (rowlock) {whereAfterQueryString}", param, tran) > 0;
+            return await Connection.ExecuteAsync($"DELETE {typeof(TTable).Name} WITH (ROWLOCK) {whereAfterQueryString}", param, tran) > 0;
 
         }
 
@@ -73,12 +50,20 @@ namespace MySDK.Dapper
 
             var type = typeof(TTable);
             var primaryKey = type.GetPrimaryKeyName();
-            return (await Connection.QueryAsync<TTable>($"select * from {type.Name} (nolock) where {primaryKey} in @ids", new { ids })).AsList();
+
+            List<TTable> result = new List<TTable>();
+            for (var i = 0; i < ids.Count; i += 100)
+            {
+                var tempIds = ids.Skip(i).Take(100);
+                var tempResult = (await Connection.QueryAsync<TTable>($"SELECT * FROM {type.Name} (NOLOCK) WHERE {primaryKey} IN @ids", new { ids = tempIds })).AsList();
+                result.AddRange(tempResult);
+            }
+            return result;
         }
 
         public async Task<List<TTable>> GetAsync(string whereAfterQueryString, object param = null)
         {
-            return (await Connection.QueryAsync<TTable>($"select * from {typeof(TTable).Name} (nolock) {whereAfterQueryString}", param)).AsList();
+            return (await Connection.QueryAsync<TTable>($"SELECT * FROM {typeof(TTable).Name} (NOLOCK) {whereAfterQueryString}", param)).AsList();
         }
 
         public async Task<long> InsertAsync(TTable entity, IDbTransaction tran = null)
@@ -101,14 +86,10 @@ namespace MySDK.Dapper
             return await Connection.UpdateAsync<List<TTable>>(entities, tran);
         }
 
-        public void Dispose()
+        public async Task<bool> UpdateAsync(UpdateBuilder<TTable> builder, object param = null, IDbTransaction tran = null)
         {
-            if (_conn != null)
-            {
-                _conn.Close();
-                _conn.Dispose();
-                _conn = null;
-            }
+            return (await Connection.ExecuteAsync(builder.BuildSql(), param, tran)) > 0;
         }
+       
     }
 }

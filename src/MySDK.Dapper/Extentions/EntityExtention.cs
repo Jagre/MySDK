@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace MySDK.Dapper.Extention
+namespace MySDK.Dapper.Extentions
 {
     public static class EntityExtention
     {

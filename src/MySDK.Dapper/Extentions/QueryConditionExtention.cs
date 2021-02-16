@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace MySDK.Dapper.Extention
+namespace MySDK.Dapper.Extentions
 {
     public static class QueryConditionExtention
     {
@@ -8,7 +8,7 @@ namespace MySDK.Dapper.Extention
         {
             if (flag)
             {
-                builder.Append($" and {condition}");
+                builder.Append($" AND {condition}");
             }
             return builder;
         }
@@ -17,7 +17,7 @@ namespace MySDK.Dapper.Extention
         {
             if (flag)
             {
-                sql += $" and {condition}";
+                sql += $" AND {condition}";
             }
             return sql;
         }
@@ -26,7 +26,7 @@ namespace MySDK.Dapper.Extention
         {
             if (flag)
             {
-                builder.Append($" or ({condition})");
+                builder.Append($" OR ({condition})");
             }
             return builder;
         }
@@ -35,7 +35,7 @@ namespace MySDK.Dapper.Extention
         {
             if (flag)
             {
-                sql += $" or ({condition})";
+                sql += $" OR ({condition})";
             }
             return sql;
         }

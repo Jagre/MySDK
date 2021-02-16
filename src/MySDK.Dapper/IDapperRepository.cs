@@ -18,6 +18,8 @@ namespace MySDK.Dapper
 
         Task<bool> UpdateAsync(List<TTable> entities, IDbTransaction tran = null);
 
+        Task<bool> UpdateAsync(UpdateBuilder<TTable> builder, object param = null, IDbTransaction tran = null);
+
         Task<bool> DeleteAsync(TTable entity, IDbTransaction tran = null);
 
         Task<bool> DeleteAsync(List<TTable> entities, IDbTransaction tran = null);
@@ -27,8 +29,5 @@ namespace MySDK.Dapper
         Task<long> InsertAsync(TTable entity, IDbTransaction tran = null);
 
         Task<bool> InsertAsync(List<TTable> entities, IDbTransaction tran = null);
-
-
-
     }
 }

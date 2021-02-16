@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MySDK.Basic\MySDK.Basic.csproj" />
+    <ProjectReference Include="..\MySDK.Configuration\MySDK.Configuration.csproj" />
     <ProjectReference Include="..\MySDK.DependencyInjection\MySDK.DependencyInjection.csproj" />
   </ItemGroup>
 

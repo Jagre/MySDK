@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using MySDK.Basic.Models;
 
 namespace MySDK.MongoDB
 {
@@ -18,19 +19,19 @@ namespace MySDK.MongoDB
             Collection = GetCollection<T>();
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T> GetAsync(string id)
         {
             var result = await Collection.FindAsync(i => i.Id == id);
             return await result.FirstOrDefaultAsync();
         }
 
-        public async Task<T> AddAsync(T doc)
+        public async Task<T> InsertAsync(T doc)
         {
             await Collection.InsertOneAsync(doc);
             return doc;
         }
 
-        public async Task<IList<T>> AddAsync(IEnumerable<T> docs)
+        public async Task<IList<T>> InsertAsync(IEnumerable<T> docs)
         {
             await Collection.InsertManyAsync(docs);
             return docs.ToList();
@@ -42,7 +43,7 @@ namespace MySDK.MongoDB
             return result.DeletedCount > 0;
         }
 
-        public async Task<IList<T>> QueryAsync(Expression<Func<T, bool>> filter)
+        public async Task<IList<T>> GetAsync(Expression<Func<T, bool>> filter)
         {
             var items = await Collection.FindAsync(filter);
             return await items.ToListAsync();

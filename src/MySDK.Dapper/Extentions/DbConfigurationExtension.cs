@@ -1,29 +1,17 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Configuration;
+using MySDK.Configuration;
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace MySDK.Dapper.Sql
+namespace MySDK.Dapper.Extentions
 {
-    public class DapperContext<T> where T : IDbConnection
-    {
-        public IDbConnection GetDbConnection(IConfigurationRoot config, string connectionName)
-        {
-            return GetDbConnection(config, connectionName);
-        }
-
-        public IDbConnection GetDbConnection(string connectionString)
-        {
-            return connectionString.GetDbConnection<T>();
-        }
-    }
-
     public static class DbConfigurationExtension
     {
-        public static IDbConnection GetDbConnection<T>(IConfigurationRoot config, string connectinName) where T : IDbConnection
+        public static IDbConnection GetDbConnection<T>(IConfiguration config, string connectinName) where T : IDbConnection
         {
-            return config.GetConnectionString(connectinName).GetDbConnection<T>();
+            return config.GetConnectionConfig(connectinName).GetDbConnection<T>();
         }
 
         public static IDbConnection GetDbConnection<T>(this string connectionString) where T : IDbConnection
