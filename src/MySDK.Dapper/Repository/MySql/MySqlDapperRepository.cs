@@ -21,8 +21,6 @@ namespace MySDK.Dapper
         where TTable : class
         where TKey : struct
     {
-        private readonly string _connectionString;
-
         public MySqlDapperRepository(string connectionName)
             : base(connectionName)
         {
