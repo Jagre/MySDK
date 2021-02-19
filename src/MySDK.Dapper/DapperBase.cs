@@ -1,6 +1,6 @@
 ﻿using Dapper.Contrib.Extensions;
 using MySDK.Configuration;
-using MySDK.Dapper.Extentions;
+using MySDK.Dapper.Extensions;
 using MySDK.DependencyInjection;
 using MySql.Data.MySqlClient;
 using System.Data;
@@ -9,12 +9,12 @@ using System.Data.SqlClient;
 
 namespace MySDK.Dapper
 {
-    public static class DapperExecuter
+    public static class DapperBase
     {
         /// <summary>
         /// constructor
         /// </summary>
-        static DapperExecuter()
+        static DapperBase()
         {
             SqlMapperExtensions.TableNameMapper = (type) => type.Name;
         }
@@ -27,8 +27,10 @@ namespace MySDK.Dapper
         /// </summary>
         public const string PAGING_SQL_SCRIPT_TEMPLATE = @" 
             WITH 
-                _data AS ({0}),
-                _count AS (SELECT COUNT(0) AS OverallCount FROM _data)
+                _data AS (
+                    {0}
+                ),
+                _count AS (SELECT COUNT(0) AS TotalCount FROM _data)
 
             SELECT  *   
             FROM    (SELECT *, ROW_NUMBER() OVER (ORDER BY {1}) AS Row_No FROM _data  CROSS JOIN _count) x

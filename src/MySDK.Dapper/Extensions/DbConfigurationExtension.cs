@@ -5,7 +5,7 @@ using MySql.Data.MySqlClient;
 using System.Data;
 using System.Data.SqlClient;
 
-namespace MySDK.Dapper.Extentions
+namespace MySDK.Dapper.Extensions
 {
     public static class DbConfigurationExtension
     {

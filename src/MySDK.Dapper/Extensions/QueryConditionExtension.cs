@@ -1,8 +1,8 @@
 ﻿using System.Text;
 
-namespace MySDK.Dapper.Extentions
+namespace MySDK.Dapper.Extensions
 {
-    public static class QueryConditionExtention
+    public static class QueryConditionExtension
     {
         public static StringBuilder AndIf(this StringBuilder builder, bool flag, string condition)
         {

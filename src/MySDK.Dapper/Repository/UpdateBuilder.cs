@@ -1,4 +1,4 @@
-﻿using MySDK.Dapper.Extentions;
+﻿using MySDK.Dapper.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;

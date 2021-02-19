@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
-using MySDK.Dapper.Extentions;
+using MySDK.Basic.Models;
+using MySDK.Dapper.Extensions;
 using MySDK.Dapper.Sql;
 using System;
 using System.Collections.Generic;
@@ -66,6 +67,11 @@ namespace MySDK.Dapper
             return (await Connection.QueryAsync<TTable>($"SELECT * FROM {typeof(TTable).Name} (NOLOCK) {whereAfterQueryString}", param)).AsList();
         }
 
+        public async Task<SqlMapper.GridReader> GetMutipleAsync(string querySql, object param = null, IDbTransaction tran = null)
+        {
+            return await Connection.ReadUncommitted().QueryMultipleAsync(querySql, param, tran);
+        }
+
         public async Task<long> InsertAsync(TTable entity, IDbTransaction tran = null)
         {
             return await Connection.InsertAsync(entity, tran);
@@ -90,6 +96,34 @@ namespace MySDK.Dapper
         {
             return (await Connection.ExecuteAsync(builder.BuildSql(), param, tran)) > 0;
         }
-       
+
+        public async Task<PagingResult<T>> PagingAsync<T>(string querySql, string orderByFields, int pageIndex = 1, int pageSize = 15, object param = null)
+        {
+            if (pageIndex <= 0)
+                pageIndex = 1;
+
+            if (pageSize <= 0)
+                pageSize = 15;
+
+            try
+            {
+                var result = new PagingResult<T>
+                {
+                    PageIndex = pageIndex,
+                    PageSize = pageSize
+                };
+                var pagingSql = string.Format(DapperBase.PAGING_SQL_SCRIPT_TEMPLATE, querySql, orderByFields, (pageIndex - 1) * pageSize + 1, pageIndex * pageSize);
+                result.Items = (await Connection.QueryAsync<T, long, T>(pagingSql,
+                    (a, b) => { result.TotalCount = b; return a; },
+                    param,
+                    splitOn: "TotalCount")).AsList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex.GetBaseException();
+            }
+        }
+
     }
 }

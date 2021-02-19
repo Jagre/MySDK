@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
 using MySDK.Basic.Models;
-using MySDK.Dapper.Extentions;
+using MySDK.Dapper.Extensions;
 using MySDK.Dapper.Sql;
 using MySql.Data.MySqlClient;
 using System;
@@ -12,21 +12,16 @@ using System.Threading.Tasks;
 
 namespace MySDK.Dapper
 {
+    /// <summary>
+    /// mysql repository
+    /// </summary>
+    /// <typeparam name="TTable"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
     public class MySqlDapperRepository<TTable, TKey> : DapperRepositoryBase<MySqlConnection>, IDapperRepository<TTable, TKey>, IDisposable
         where TTable : class
         where TKey : struct
     {
         private readonly string _connectionString;
-
-        //public MySqlDapperRepository(string connectionString)
-        //{
-        //    _connectionString = connectionString;
-        //}
-
-        //public MySqlDapperRepository(IConfiguration config, string connectionName)
-        //{
-        //    _connectionString = config.GetConnectionString(connectionName);
-        //}
 
         public MySqlDapperRepository(string connectionName)
             : base(connectionName)
@@ -76,6 +71,11 @@ namespace MySDK.Dapper
             return (await Connection.ReadUncommitted().QueryAsync<TTable>($"SELECT * FROM {typeof(TTable).Name} {FullWhereQueryCondition(whereAfterQueryString)}", param)).AsList();
         }
 
+        public async Task<SqlMapper.GridReader> GetMutipleAsync(string querySql, object param = null, IDbTransaction tran = null)
+        {
+            return await Connection.ReadUncommitted().QueryMultipleAsync(querySql, param, tran);
+        }
+
         public async Task<long> InsertAsync(TTable entity, IDbTransaction tran = null)
         {
             return await Connection.InsertAsync(entity, tran);
@@ -101,29 +101,41 @@ namespace MySDK.Dapper
             return (await Connection.ExecuteAsync(builder.BuildSql(), param, tran)) > 0;
         }
 
-        public async Task<PagingResult<T>> PagingAsync<T>(string querySql, string orderBy, int pageIndex, int pageSize)
+        /// <summary>
+        /// Paging (just support version >= mysql 8.0)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="querySql"></param>
+        /// <param name="orderByFields"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public async Task<PagingResult<T>> PagingAsync<T>(string querySql, string orderByFields, int pageIndex = 1, int pageSize = 15, object param = null)
         {
             if (pageIndex <= 0)
                 pageIndex = 1;
 
             if (pageSize <= 0)
-                pageSize = 10;
+                pageSize = 15;
 
             try
             {
-                var pagingSql = string.Format(DapperExecuter.PAGING_SQL_SCRIPT_TEMPLATE, querySql, orderBy, (pageIndex - 1) * pageSize + 1, pageIndex * pageSize);
-                var items = (await Connection.QueryAsync<T>(pagingSql)).AsList();
-                return new PagingResult<T>
+                var result = new PagingResult<T>
                 {
                     PageIndex = pageIndex,
-                    PageSize = pageSize,
-                    //TotalCount =  //TODO Jagre
-                    Items = items
+                    PageSize = pageSize
                 };
+                var pagingSql = string.Format(DapperBase.PAGING_SQL_SCRIPT_TEMPLATE, querySql, orderByFields, (pageIndex - 1) * pageSize + 1, pageIndex * pageSize);
+                result.Items = (await Connection.QueryAsync<T, long, T>(pagingSql,
+                    (a, b) => { result.TotalCount = b; return a; },
+                    param,
+                    splitOn: "TotalCount")).AsList();
+                return result;
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ex.GetBaseException();
             }
         }
 

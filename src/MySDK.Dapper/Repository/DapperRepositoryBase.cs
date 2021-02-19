@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using MySDK.Dapper.Extentions;
+using MySDK.Dapper.Extensions;
 using MySDK.DependencyInjection;
 using System;
 using System.Data;
@@ -8,7 +8,6 @@ namespace MySDK.Dapper.Sql
 {
     public class DapperRepositoryBase<T> where T : IDbConnection, IDisposable
     {
-
         private IDbConnection _conn;
         public IDbConnection Connection
         {
@@ -48,7 +47,8 @@ namespace MySDK.Dapper.Sql
                 _conn = null;
             }
         }
+       
     }
 
-    
+
 }
