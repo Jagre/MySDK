@@ -8,7 +8,7 @@ namespace MySDK.Redis
     /// </summary>
     public interface IRedisRepository
     {
-        Task<bool> SetAsync<T>(string key, T value, TimeSpan? expiry);
+        Task<bool> SetAsync<T>(string key, T value, TimeSpan? expiry = null);
 
         Task<bool> RemoveAsync(string key);
 

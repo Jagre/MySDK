@@ -1,24 +1,27 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MySDK.DependencyInjection;
 using StackExchange.Redis;
+using System;
 
 namespace MySDK.Redis
 {
     public abstract class RedisContext
     {
-
-        protected IDatabase DB { get; private set; }
-
-
-        public RedisContext(IConfigurationRoot root, string redisServerName)
-            : this(root.GetRedisConfiguration(redisServerName))
+        private readonly IDatabase _db;
+        public IDatabase DB
         {
+            get
+            {
+                if (_db == null)
+                    throw new NullReferenceException("Redis connection object hasn't been initialzed.");
+                return _db;
+            }
         }
 
-        public RedisContext(RedisConfiguration config)
+        public RedisContext(string redisServerName)
         {
-            IConnectionMultiplexer conn = ConnectionMultiplexer.Connect(config.ToString());
-            DB = conn.GetDatabase();
+            var redisConfiguration = MyServiceProvider.Configuration.GetRedisConfiguration(redisServerName);
+            var connectionMultiplexer = ConnectionMultiplexer.Connect(redisConfiguration.ToString());
+            _db = connectionMultiplexer?.GetDatabase();
         }
-
     }
 }

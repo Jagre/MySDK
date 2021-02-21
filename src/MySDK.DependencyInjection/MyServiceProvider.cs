@@ -10,11 +10,11 @@ namespace MySDK.DependencyInjection
 
         public static IConfiguration Configuration { get; set; }
 
-        public static T GetInstance<T>()
+        public static T GetService<T>()
         {
             if (Provider == null)
             {
-                throw new Exception("Havn't setted ServiceProvider object");
+                throw new NullReferenceException("Haven't setted ServiceProvider object");
             }
             return Provider.GetService<T>();
         }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MySDK.Configuration;
 
 namespace MySDK.Redis
 {
@@ -66,21 +67,18 @@ namespace MySDK.Redis
 
     }
 
-    public static class RedisConifgurationExtend
+    public static class RedisConifgurationExtension
     {
-
-        public static List<RedisConfiguration> GetRedisConfigurations(this IConfigurationRoot root)
+        public static List<RedisConfiguration> GetRedisConfigurations(this IConfiguration root)
         {
-            var configs = new List<RedisConfiguration>();
-            root.GetSection("RedisConfiguration").Bind(configs);
-            return configs;
+            return root.GetConfiguration<List<RedisConfiguration>>("RedisConfiguration");
         }
 
-        public static RedisConfiguration GetRedisConfiguration(this IConfigurationRoot root, string redisServerName)
+        public static RedisConfiguration GetRedisConfiguration(this IConfiguration root, string redisServerName)
         {
             var configs = root.GetRedisConfigurations();
             if (null != configs)
-                configs.Where(i => i.Name.ToLower() == redisServerName.ToLower()).FirstOrDefault();
+                return configs.Where(i => i.Name.ToLower() == redisServerName.ToLower()).FirstOrDefault();
             return null;
         }
     }

@@ -19,14 +19,14 @@ namespace MySDK.Serialization
             //TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple (Simple is default)
         };
 
-        public static string ToJson<T>(this T value)
+        public static string ToJson<T>(this T value, JsonSerializerSettings settings = null)
         {
-            return JsonConvert.SerializeObject(value, DefaultSetting);
+            return JsonConvert.SerializeObject(value, settings ?? DefaultSetting);
         }
 
-        public static T FromJson<T>(this string value)
+        public static T FromJson<T>(this string value, JsonSerializerSettings settings = null)
         {
-            return JsonConvert.DeserializeObject<T>(value, DefaultSetting);
+            return JsonConvert.DeserializeObject<T>(value, settings ?? DefaultSetting);
         }
     }
 }

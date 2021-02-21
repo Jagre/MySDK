@@ -1,21 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
+﻿using MySDK.Serialization;
 using StackExchange.Redis;
 using System;
-using System.Data;
 using System.Threading.Tasks;
 
 namespace MySDK.Redis
 {
     public class RedisRepository : RedisContext, IRedisRepository
     {
-        public RedisRepository(RedisConfiguration configuration)
-            : base(configuration)
-        {
-        }
-
-        public RedisRepository(IConfigurationRoot root, string redisServerName)
-            : base(root, redisServerName)
+        public RedisRepository(string redisServerName)
+            : base(redisServerName)
         {
         }
 
@@ -26,12 +19,8 @@ namespace MySDK.Redis
 
         public async Task<T> GetAsync<T>(string key)
         {
-            var json = await DB.StringGetAsync(key);
-            return JsonConvert.DeserializeObject<T>(json, new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Include,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            });
+            var data = await DB.StringGetAsync(key);
+            return data.ToString().FromJson<T>();
         }
 
         public Task<bool> LockAsync(string key, string value, TimeSpan expiry)
@@ -46,13 +35,8 @@ namespace MySDK.Redis
 
         public async Task<bool> SetAsync<T>(string key, T value, TimeSpan? expiry = null)
         {
-            var json = JsonConvert.SerializeObject(value, Formatting.None, new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Include,
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            });
             //when expiry is null that imply permanent
-            return await DB.StringSetAsync(key, json, expiry, When.Always);
+            return await DB.StringSetAsync(key, value.ToJson(), expiry, When.Always);
         }
 
         public async Task<bool> UnlockAsync(string key, string value)
