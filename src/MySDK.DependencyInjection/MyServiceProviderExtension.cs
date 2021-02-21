@@ -25,18 +25,14 @@ namespace MySDK.DependencyInjection
             {
                 if (!type.IsAbstract && !type.IsSealed && !type.IsNested && type.IsClass)
                 {
-                    var constructors = type.GetConstructors(BindingFlags.Public);
-                    if (constructors.Any(i => i.GetParameters().Count() == 0))
+                    var typeInterface = type.GetInterfaces()?.FirstOrDefault(i => i.IsInterface && i.Name.EndsWith(suffix, StringComparison.CurrentCulture));
+                    if (typeInterface == null)
                     {
-                        var typeInterface = type.GetInterfaces()?.FirstOrDefault(i => i.IsInterface && i.Name.EndsWith(suffix, StringComparison.CurrentCulture));
-                        if (typeInterface == null)
-                        {
-                            services.Add(ServiceDescriptor.Describe(type, type, lifetime));
-                        }
-                        else
-                        {
-                            services.Add(ServiceDescriptor.Describe(typeInterface, type, lifetime));
-                        }
+                        services.Add(ServiceDescriptor.Describe(type, type, lifetime));
+                    }
+                    else
+                    {
+                        services.Add(ServiceDescriptor.Describe(typeInterface, type, lifetime));
                     }
                 }
             }
