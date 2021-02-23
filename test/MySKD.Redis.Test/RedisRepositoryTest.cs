@@ -18,6 +18,9 @@ namespace MySKD.Redis.Test
             var repo = MyServiceProvider.GetService<IRedisRepository>();
             var flag = await repo.SetAsync("test", new byte[] { 97, 98, 99 }, TimeSpan.FromSeconds(100));
             Assert.True(flag);
+
+            var bytes = await repo.GetAsync<byte[]>("test");
+            Assert.Equal((byte)98, bytes[1]);
         }
     }
 }

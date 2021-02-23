@@ -29,9 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySDK.Serialization", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySDK.Dapper.Test", "test\MySDK.Dapper.Test\MySDK.Dapper.Test.csproj", "{6F76DBB1-F4DA-4E91-B5D6-B9C837806364}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySDK.Url", "src\MySDK.Url\MySDK.Url.csproj", "{1AF68AFE-59C0-4605-8848-F03C1B25C923}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySDK.FlurlHttp", "src\MySDK.Url\MySDK.FlurlHttp.csproj", "{1AF68AFE-59C0-4605-8848-F03C1B25C923}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySDK.DependencyInjection.Test", "test\MySDK.DependencyInjection.Test\MySDK.DependencyInjection.Test.csproj", "{38C5AA43-C4A4-4A34-A41F-8274316D8344}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySDK.DependencyInjection.Test", "test\MySDK.DependencyInjection.Test\MySDK.DependencyInjection.Test.csproj", "{38C5AA43-C4A4-4A34-A41F-8274316D8344}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
