@@ -4,9 +4,9 @@ using MySDK.DependencyInjection;
 using System;
 using System.Data;
 
-namespace MySDK.Dapper.Sql
+namespace MySDK.Dapper
 {
-    public class DapperRepositoryBase<T> where T : IDbConnection, IDisposable
+    public class DapperDbContext<T> : IDisposable where T : IDbConnection
     {
         private IDbConnection _conn;
         public IDbConnection Connection
@@ -14,7 +14,7 @@ namespace MySDK.Dapper.Sql
             get
             {
                 if (_conn == null)
-                    throw new NullReferenceException("The connection object don't initalize or disposed");
+                    throw new NullReferenceException("The connection object was uninitialized or disposed");
 
                 if (_conn.State != ConnectionState.Open)
                 {
@@ -24,7 +24,7 @@ namespace MySDK.Dapper.Sql
             }
         }
 
-        public DapperRepositoryBase(string connectionName)
+        public DapperDbContext(string connectionName)
         {
             var connectionString = MyServiceProvider.Configuration.GetConnectionString(connectionName);
             _conn = GetDbConnection(connectionString);
@@ -47,7 +47,7 @@ namespace MySDK.Dapper.Sql
                 _conn = null;
             }
         }
-       
+
     }
 
 

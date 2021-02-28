@@ -69,16 +69,22 @@ namespace MySDK.Redis
 
     public static class RedisConifgurationExtension
     {
-        public static List<RedisConfiguration> GetRedisConfigurations(this IConfiguration root)
+        private static List<RedisConfiguration> _configurations;
+
+        public static List<RedisConfiguration> GetRedisConfigurations(this IConfiguration configuration)
         {
-            return root.GetConfiguration<List<RedisConfiguration>>("RedisConfiguration");
+            if (_configurations != null)
+                return _configurations;
+
+            _configurations = configuration.GetConfiguration<List<RedisConfiguration>>("RedisConfiguration");
+            return _configurations;
         }
 
-        public static RedisConfiguration GetRedisConfiguration(this IConfiguration root, string redisServerName)
+        public static RedisConfiguration GetRedisConfiguration(this IConfiguration configuration, string redisServerName)
         {
-            var configs = root.GetRedisConfigurations();
-            if (null != configs)
-                return configs.Where(i => i.Name.ToLower() == redisServerName.ToLower()).FirstOrDefault();
+            var configurations = configuration.GetRedisConfigurations();
+            if (null != configurations)
+                return configurations.Where(i => i.Name.ToLower() == redisServerName.ToLower()).FirstOrDefault();
             return null;
         }
     }

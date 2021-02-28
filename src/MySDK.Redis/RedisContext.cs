@@ -4,7 +4,7 @@ using System;
 
 namespace MySDK.Redis
 {
-    public abstract class RedisContext
+    public class RedisContext
     {
         private readonly IDatabase _db;
         public IDatabase DB

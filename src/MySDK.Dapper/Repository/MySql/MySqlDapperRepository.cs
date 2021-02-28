@@ -2,7 +2,6 @@
 using Dapper.Contrib.Extensions;
 using MySDK.Basic.Models;
 using MySDK.Dapper.Extensions;
-using MySDK.Dapper.Sql;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ namespace MySDK.Dapper
     /// </summary>
     /// <typeparam name="TTable"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public class MySqlDapperRepository<TTable, TKey> : DapperRepositoryBase<MySqlConnection>, IDapperRepository<TTable, TKey>, IDisposable
+    public class MySqlDapperRepository<TTable, TKey> : DapperDbContext<MySqlConnection>, IDapperRepository<TTable, TKey>, IDisposable
         where TTable : class
         where TKey : struct
     {

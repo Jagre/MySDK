@@ -2,7 +2,7 @@
 
 namespace MySDK.MongoDB
 {
-    public abstract class MongoDbContext
+    public class MongoDbContext
     {
         protected IMongoDatabase DB { get; private set; }
 
