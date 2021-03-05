@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MySDK.FlurlHttp
+namespace MySDK.URL
 {
     /// <summary>
     /// Get Request Extension

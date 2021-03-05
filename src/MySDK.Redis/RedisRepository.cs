@@ -20,7 +20,14 @@ namespace MySDK.Redis
         public async Task<T> GetAsync<T>(string key)
         {
             var data = await DB.StringGetAsync(key);
-            return data.ToString().FromJson<T>();
+            if (IsBasicType(typeof(T)))
+            {
+                return (T)data.Box();
+            }
+            else
+            {
+                return data.ToString().FromJson<T>();
+            }
         }
 
         public Task<bool> LockAsync(string key, string value, TimeSpan expiry)
@@ -35,8 +42,36 @@ namespace MySDK.Redis
 
         public async Task<bool> SetAsync<T>(string key, T value, TimeSpan? expiry = null)
         {
+            string redisValue = string.Empty;
+            if (IsBasicType(typeof(T)))
+            {
+                redisValue = RedisValue.Unbox(value);
+            }
+            else
+            {
+                redisValue = value.ToJson();
+            }
+
             //when expiry is null that imply permanent
-            return await DB.StringSetAsync(key, value.ToJson(), expiry, When.Always);
+            return await DB.StringSetAsync(key, redisValue, expiry, When.Always);
+        }
+
+        private bool IsBasicType(Type type)
+        {
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Boolean:
+                case TypeCode.Byte:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                case TypeCode.Decimal:
+                case TypeCode.Double:
+                case TypeCode.SByte:
+                case TypeCode.Single:
+                    return true;
+            }
+            return false;
         }
 
         public async Task<bool> UnlockAsync(string key, string value)

@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace MySDK.FlurlHttp
+namespace MySDK.URL
 {
     /// <summary>
     /// Post Request Extension
