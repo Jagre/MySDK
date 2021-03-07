@@ -44,7 +44,7 @@ namespace MySDK.DependencyInjection.Test
             {
                 var obj7 = MyServiceProvider.GetService<IFModel>();
             }
-            catch (Exception ex)
+            catch
             {
                 //Assert.IsType<NullReferenceException>(ex.GetBaseException());
             }
