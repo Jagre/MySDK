@@ -13,8 +13,8 @@ namespace MySDK.MongoDB
     {
         public IMongoCollection<T> Collection { get; private set; }
 
-        public MongoRepository(string connectionString)
-            : base(connectionString)
+        public MongoRepository(string connectionName)
+            : base(connectionName)
         {
             Collection = GetCollection<T>();
         }

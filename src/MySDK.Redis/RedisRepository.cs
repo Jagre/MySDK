@@ -20,14 +20,59 @@ namespace MySDK.Redis
         public async Task<T> GetAsync<T>(string key)
         {
             var data = await DB.StringGetAsync(key);
-            if (IsBasicType(typeof(T)))
+            if (!data.HasValue)
             {
-                return (T)data.Box();
+                return default(T);
+            }
+
+            var type = typeof(T);
+            if (IsBasicType(type))
+            {
+                return (T)ConvertToBasicTypeObject<T>(data);
             }
             else
             {
                 return data.ToString().FromJson<T>();
             }
+        }
+
+        private object ConvertToBasicTypeObject<T>(RedisValue data)
+        {
+            switch (Type.GetTypeCode(typeof(T)))
+            {
+                case TypeCode.Byte:
+                case TypeCode.SByte:
+                case TypeCode.Int16:
+                case TypeCode.UInt16:
+                case TypeCode.Int32:
+                case TypeCode.UInt32:
+                    int temp1;
+                    if (data.TryParse(out temp1))
+                    {
+                        return temp1;
+                    }
+                    break;
+                case TypeCode.Int64:
+                case TypeCode.UInt64:
+                    int temp2;
+                    if (data.TryParse(out temp2))
+                    {
+                        return temp2;
+                    }
+                    break;
+                case TypeCode.Double:
+                case TypeCode.Decimal:
+                case TypeCode.Single:
+                    double temp3;
+                    if (data.TryParse(out temp3))
+                    {
+                        return temp3;
+                    }
+                    break;
+                case TypeCode.String:
+                    return data.ToString();
+            }
+            return default(T);
         }
 
         public Task<bool> LockAsync(string key, string value, TimeSpan expiry)
@@ -62,13 +107,17 @@ namespace MySDK.Redis
             {
                 case TypeCode.Boolean:
                 case TypeCode.Byte:
+                case TypeCode.SByte:
                 case TypeCode.Int16:
+                case TypeCode.UInt16:
                 case TypeCode.Int32:
+                case TypeCode.UInt32:
                 case TypeCode.Int64:
+                case TypeCode.UInt64:
                 case TypeCode.Decimal:
                 case TypeCode.Double:
-                case TypeCode.SByte:
                 case TypeCode.Single:
+                case TypeCode.String:
                     return true;
             }
             return false;

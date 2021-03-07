@@ -13,7 +13,7 @@ namespace MySDK.Dapper.Test
 
         public DapperTest()
         {
-            _connectionString = ConfigurationRoot.GetConnectionConfig("test");
+            _connectionString = ConfigurationRoot.GetConnectionString("test");
         }
 
         [Fact]

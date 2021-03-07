@@ -11,7 +11,7 @@ namespace MySDK.Dapper.Extensions
     {
         public static IDbConnection GetDbConnection<T>(IConfiguration config, string connectinName) where T : IDbConnection
         {
-            return config.GetConnectionConfig(connectinName).GetDbConnection<T>();
+            return ConfigurationExtension.GetConnectionString(config, connectinName).GetDbConnection<T>();
         }
 
         public static IDbConnection GetDbConnection<T>(this string connectionString) where T : IDbConnection

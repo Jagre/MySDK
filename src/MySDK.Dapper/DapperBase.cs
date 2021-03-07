@@ -45,7 +45,7 @@ namespace MySDK.Dapper
         /// <returns></returns>
         public static IDbConnection GetConnection<T>(string connectionName) where T : IDbConnection
         {
-            return MyServiceProvider.Configuration.GetConnectionConfig(connectionName).GetDbConnection<T>();
+            return MyServiceProvider.Configuration.GetConnectionString(connectionName).GetDbConnection<T>();
         }
 
         public static IDbConnection GetSqlConnection(string connectionName)

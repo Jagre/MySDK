@@ -16,17 +16,17 @@ namespace MySDK.Configuration
             return bindObj;
         }
 
-        public static string GetSiteConfig(this IConfiguration config, string siteName)
+        public static string GetSiteUrl(this IConfiguration config, string siteName)
         {
-            return GetSection(config, "Sites")[siteName];
+            return GetSection(config, "SiteUrls")[siteName];
         }
 
-        public static string GetConnectionConfig(this IConfiguration config, string connectionName)
+        public static string GetConnectionString(this IConfiguration config, string connectionName)
         {
             return GetSection(config, "Connections")[connectionName];
         }
 
-        public static string GetAppSettingConfig(this IConfiguration config, string settingName)
+        public static string GetAppSetting(this IConfiguration config, string settingName)
         {
             return GetSection(config, "AppSettings")[settingName];
         }
