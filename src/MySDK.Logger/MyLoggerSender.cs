@@ -81,7 +81,11 @@ namespace MySDK.Logger
 
                     if (logs.Any())
                     {
-                        await _configuration.LogURL.PostJsonAsync(logs);
+                        try
+                        {
+                            await _configuration.LogURL.PostJsonAsync(logs);
+                        }
+                        catch { }
                         watch.Stop();
                     }
                 }

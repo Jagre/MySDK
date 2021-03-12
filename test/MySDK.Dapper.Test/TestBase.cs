@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using MySDK.DependencyInjection;
 using System.IO;
-using System.Reflection;
 
 namespace MySDK.Dapper.Test
 {

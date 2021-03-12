@@ -29,9 +29,14 @@ namespace MySDK.RabbitMQ
             var factory = new ConnectionFactory()
             {
                 Uri = new Uri(connectionString),
-                NetworkRecoveryInterval = TimeSpan.FromSeconds(20),
-                //AutomaticRecoveryEnabled = true,
-                //TopologyRecoveryEnabled = true
+                AutomaticRecoveryEnabled = true,
+                TopologyRecoveryEnabled = true,
+                SocketReadTimeout = TimeSpan.FromMilliseconds(1500),
+                SocketWriteTimeout = TimeSpan.FromMilliseconds(1500),
+                ContinuationTimeout = TimeSpan.FromMilliseconds(1500),
+                RequestedHeartbeat = TimeSpan.FromMilliseconds(3000),
+                NetworkRecoveryInterval = TimeSpan.FromMilliseconds(3000),
+                RequestedConnectionTimeout = TimeSpan.FromMilliseconds(3000)
             };
 
             _connection = factory.CreateConnection();
@@ -41,6 +46,7 @@ namespace MySDK.RabbitMQ
         {
             if (_connection != null)
             {
+                _connection.Close();
                 _connection.Dispose();
                 _connection = null;
             }

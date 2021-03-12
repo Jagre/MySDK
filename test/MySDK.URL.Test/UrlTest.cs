@@ -4,7 +4,7 @@ using Xunit;
 
 namespace MySDK.URL.Test
 {
-    public class UrlTest
+    public class URLTest
     {
         [Fact]
         public async Task Test_GetRequestUrl_Ok()
@@ -13,5 +13,6 @@ namespace MySDK.URL.Test
             var content = await "https://www.baidu.com".GetStringAsync();
             Assert.NotNull(content);
         }
+        
     }
 }

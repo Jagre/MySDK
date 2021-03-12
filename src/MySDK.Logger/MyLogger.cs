@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using MySDK.Configuration;
 using System;
 
 namespace MySDK.Logger
@@ -11,6 +12,10 @@ namespace MySDK.Logger
         public MyLogger(IConfiguration configuration)
         {
             _loggerConfiguration = configuration.GetLoggerConfiguration();
+            if (string.IsNullOrEmpty(_loggerConfiguration.LogURL))
+            {
+                _loggerConfiguration.LogURL = configuration.GetSiteUrl("LogURL");
+            }
             _sender = new MyLoggerSender<MyLog>(_loggerConfiguration);
         }
 

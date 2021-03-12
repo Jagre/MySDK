@@ -19,6 +19,7 @@ namespace MySDK.RabbitMQ
         protected string RoutingKey;
         protected string ExchangeName;
         protected string ExchangeType;
+        protected bool Durable;
 
         public Action<MessageResult> BeforeMessageHandling;
         public Action<MessageResult> AfterMessageHandled;
@@ -30,6 +31,7 @@ namespace MySDK.RabbitMQ
             RoutingKey = routingKey;
             ExchangeName = exchangeName;
             ExchangeType = exchangeType;
+            Durable = durable;
 
             _channel = Connection.CreateModel();
             
