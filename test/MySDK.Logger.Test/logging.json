@@ -1,0 +1,9 @@
+{
+  "LoggerConfiguration": {
+    "SystemName": "Test",
+    "ApplicationName": "MySDK.Logger.Test",
+    "MachineIP": "127.0.0.1",
+    "LogURL":  "http://192.168.56.102/logger/savelogs"
+  }
+
+}
