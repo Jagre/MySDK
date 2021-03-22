@@ -11,7 +11,7 @@ namespace MySDK.Dapper.Extensions
     {
         public static async Task<T> GetAsync<T>(this string sql, string connectionName, object param = null, IDbTransaction tran = null)
         {
-            using (var conn = DapperBase.GetMySqlConnection(connectionName))
+            using (var conn = DapperContext.GetMySqlConnection(connectionName))
             {
                 var result = await conn.ReadUncommitted().QueryAsync<T>(sql, param, tran);
                 return result.FirstOrDefault();
@@ -20,7 +20,7 @@ namespace MySDK.Dapper.Extensions
 
         public static async Task<bool> ExecuteAsync(this string sql, string connectionName, object param =null, IDbTransaction tran = null)
         {
-            using (var conn = DapperBase.GetMySqlConnection(connectionName))
+            using (var conn = DapperContext.GetMySqlConnection(connectionName))
             {
                 var effectCount = await conn.ExecuteAsync(sql, param, tran);
                 return effectCount > 0;
@@ -42,8 +42,8 @@ namespace MySDK.Dapper.Extensions
                     PageIndex = pageIndex,
                     PageSize = pageSize
                 };
-                var pagingSql = string.Format(DapperBase.PAGING_SQL_SCRIPT_TEMPLATE, sql, orderByFields, (pageIndex - 1) * pageSize + 1, pageIndex * pageSize);
-                using (var conn = DapperBase.GetMySqlConnection(connectionName))
+                var pagingSql = string.Format(DapperContext.PAGING_SQL_SCRIPT_TEMPLATE, sql, orderByFields, (pageIndex - 1) * pageSize + 1, pageIndex * pageSize);
+                using (var conn = DapperContext.GetMySqlConnection(connectionName))
                 {
                     result.Items = (await conn.ReadUncommitted().QueryAsync<T, long, T>(pagingSql,
                         (a, b) => { result.TotalCount = b; return a; },

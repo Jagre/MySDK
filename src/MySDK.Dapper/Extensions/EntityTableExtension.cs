@@ -41,16 +41,16 @@ namespace MySDK.Dapper.Extensions
         {
             if (!_keys.ContainsKey(type.TypeHandle))
             {
-                var properties = type.GetProperties(System.Reflection.BindingFlags.Public)?.Where(i => i.GetCustomAttributes(true).OfType<KeyAttribute>().Any());
-                if (properties != null)
+                var properties = type.GetProperties().Where(i => i.GetCustomAttributes(true).OfType<KeyAttribute>().Any());
+                if (properties != null && properties.Any())
                 {
                     _keys.TryAdd(type.TypeHandle, properties);
                 }
             }
             if (!_explicityKeys.ContainsKey(type.TypeHandle))
             {
-                var properties = type.GetProperties(System.Reflection.BindingFlags.Public)?.Where(i => i.GetCustomAttributes(true).OfType<ExplicitKeyAttribute>().Any());
-                if (properties != null)
+                var properties = type.GetProperties()?.Where(i => i.GetCustomAttributes(true).OfType<ExplicitKeyAttribute>().Any());
+                if (properties != null && properties.Any())
                 {
                     _explicityKeys.TryAdd(type.TypeHandle, properties);
                 }

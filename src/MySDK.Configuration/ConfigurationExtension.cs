@@ -23,7 +23,7 @@ namespace MySDK.Configuration
 
         public static string GetConnectionString(this IConfiguration config, string connectionName)
         {
-            return GetSection(config, "Connections")[connectionName];
+            return GetSection(config, "ConnectionStrings")[connectionName];
         }
 
         public static string GetAppSetting(this IConfiguration config, string settingName)

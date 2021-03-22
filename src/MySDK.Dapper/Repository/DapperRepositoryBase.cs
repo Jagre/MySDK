@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
-using MySDK.Dapper.Extensions;
+﻿using MySDK.Dapper.Extensions;
 using MySDK.DependencyInjection;
 using System;
 using System.Data;
+using MySDK.Configuration;
 
 namespace MySDK.Dapper
 {
-    public class DapperDbContext<T> : IDisposable where T : IDbConnection
+    public class DapperRepositoryBase<T> : IDisposable where T : IDbConnection
     {
         private IDbConnection _conn;
         public IDbConnection Connection
@@ -24,7 +24,7 @@ namespace MySDK.Dapper
             }
         }
 
-        public DapperDbContext(string connectionName)
+        public DapperRepositoryBase(string connectionName)
         {
             var connectionString = MyServiceProvider.Configuration.GetConnectionString(connectionName);
             _conn = GetDbConnection(connectionString);

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MySDK.Dapper
 {
-    public class SqlDapperRepository<TTable, TKey> : DapperDbContext<SqlConnection>, IDapperRepository<TTable, TKey>, IDisposable
+    public class SqlDapperRepository<TTable, TKey> : DapperRepositoryBase<SqlConnection>, IDapperRepository<TTable, TKey>, IDisposable
         where TTable : class
         where TKey : struct
     {
@@ -111,7 +111,7 @@ namespace MySDK.Dapper
                     PageIndex = pageIndex,
                     PageSize = pageSize
                 };
-                var pagingSql = string.Format(DapperBase.PAGING_SQL_SCRIPT_TEMPLATE, querySql, orderByFields, (pageIndex - 1) * pageSize + 1, pageIndex * pageSize);
+                var pagingSql = string.Format(DapperContext.PAGING_SQL_SCRIPT_TEMPLATE, querySql, orderByFields, (pageIndex - 1) * pageSize + 1, pageIndex * pageSize);
                 result.Items = (await Connection.QueryAsync<T, long, T>(pagingSql,
                     (a, b) => { result.TotalCount = b; return a; },
                     param,

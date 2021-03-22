@@ -9,12 +9,12 @@ using System.Data.SqlClient;
 
 namespace MySDK.Dapper
 {
-    public static class DapperBase
+    public static class DapperContext
     {
         /// <summary>
         /// constructor
         /// </summary>
-        static DapperBase()
+        static DapperContext()
         {
             SqlMapperExtensions.TableNameMapper = (type) => type.Name;
         }

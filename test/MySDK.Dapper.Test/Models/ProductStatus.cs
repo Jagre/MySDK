@@ -17,10 +17,11 @@ namespace Test.Entities
     /// </summary>    
     public class ProductStatus
     {
-        
+
         /// <summary>
         /// 产品ID
         /// </summary>
+        [Dapper.Contrib.Extensions.Key]
         [Dapper.Contrib.Extensions.ExplicitKey]
         public int Id { get; set; }
         

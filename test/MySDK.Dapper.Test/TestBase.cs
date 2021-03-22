@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using MySDK.DependencyInjection;
 using System.IO;
 
@@ -16,8 +17,10 @@ namespace MySDK.Dapper.Test
                 .AddJsonFile("configuration.json", true, true)
                 .Build();
 
+            //IServiceCollection services = new ServiceCollection();
+
             MyServiceProvider.Configuration = ConfigurationRoot;
-            //MyServiceProvider.Provider = new ServiceProvider()
+            //MyServiceProvider.Provider = services.BuildServiceProvider();
         }
     }
 }

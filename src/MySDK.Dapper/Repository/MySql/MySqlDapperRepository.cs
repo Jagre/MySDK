@@ -16,7 +16,7 @@ namespace MySDK.Dapper
     /// </summary>
     /// <typeparam name="TTable"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public class MySqlDapperRepository<TTable, TKey> : DapperDbContext<MySqlConnection>, IDapperRepository<TTable, TKey>, IDisposable
+    public class MySqlDapperRepository<TTable, TKey> : DapperRepositoryBase<MySqlConnection>, IDapperRepository<TTable, TKey>, IDisposable
         where TTable : class
         where TKey : struct
     {
@@ -37,7 +37,7 @@ namespace MySDK.Dapper
 
         public async Task<bool> DeleteAsync(string whereAfterQueryString, object param = null, IDbTransaction tran = null)
         {
-            return await Connection.ExecuteAsync($"DELETE {typeof(TTable).Name} {FullWhereQueryCondition(whereAfterQueryString)}", param, tran) > 0;
+            return await Connection.ExecuteAsync($"DELETE FROM {typeof(TTable).Name} {FullWhereQueryCondition(whereAfterQueryString)}", param, tran) > 0;
         }
 
         public async Task<TTable> GetAsync(TKey id)
@@ -123,7 +123,7 @@ namespace MySDK.Dapper
                     PageIndex = pageIndex,
                     PageSize = pageSize
                 };
-                var pagingSql = string.Format(DapperBase.PAGING_SQL_SCRIPT_TEMPLATE, querySql, orderByFields, (pageIndex - 1) * pageSize + 1, pageIndex * pageSize);
+                var pagingSql = string.Format(DapperContext.PAGING_SQL_SCRIPT_TEMPLATE, querySql, orderByFields, (pageIndex - 1) * pageSize + 1, pageIndex * pageSize);
                 result.Items = (await Connection.QueryAsync<T, long, T>(pagingSql,
                     (a, b) => { result.TotalCount = b; return a; },
                     param,
