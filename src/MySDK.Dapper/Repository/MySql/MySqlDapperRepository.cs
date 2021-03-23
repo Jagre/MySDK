@@ -149,5 +149,212 @@ namespace MySDK.Dapper
             return $"WHERE {whereAfterQueryString}";
         }
 
+        public async Task<List<TRelationalTab1>> GetRelationalTablesAsync<TRelationalTab1>(TKey id)
+        {
+            return await GetRelationalTablesAsync<TRelationalTab1>(new List<TKey> { id });
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2>(TKey id)
+        {
+            return await GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2>(new List<TKey> { id });
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>, List<TRelationalTab3>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3>(TKey id)
+        {
+            return await GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3>(new List<TKey> { id });
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>, List<TRelationalTab3>, List<TRelationalTab4>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4>(TKey id)
+        {
+            return await GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4>(new List<TKey> { id });
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>, List<TRelationalTab3>, List<TRelationalTab4>, List<TRelationalTab5>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4, TRelationalTab5>(TKey id)
+        {
+            return await GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4, TRelationalTab5>(new List<TKey> { id });
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>, List<TRelationalTab3>, List<TRelationalTab4>, List<TRelationalTab5>, List<TRelationalTab6>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4, TRelationalTab5, TRelationalTab6>(TKey id)
+        {
+            return await GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4, TRelationalTab5, TRelationalTab6>(new List<TKey> { id });
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>, List<TRelationalTab3>, List<TRelationalTab4>, List<TRelationalTab5>, List<TRelationalTab6>, List<TRelationalTab7>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4, TRelationalTab5, TRelationalTab6, TRelationalTab7>(TKey id)
+        {
+            return await GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4, TRelationalTab5, TRelationalTab6, TRelationalTab7>(new List<TKey> { id });
+        }
+
+        public async Task<List<TRelationalTab1>> GetRelationalTablesAsync<TRelationalTab1>(List<TKey> ids)
+        {
+            var keyName = typeof(TTable).GetPrimaryKeyName();
+            if (string.IsNullOrEmpty(keyName))
+            {
+                return new List<TRelationalTab1>();
+            }
+
+            var sql = $@"SELECT * FROM {typeof(TRelationalTab1).Name} WHERE {keyName} IN @ids";
+            var reader = await this.GetMutipleAsync(sql, new { ids = ids });
+            var items1 = (await reader.ReadAsync<TRelationalTab1>()).AsList();
+            return items1;
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2>(List<TKey> ids)
+        {
+            var keyName = typeof(TTable).GetPrimaryKeyName();
+            if (string.IsNullOrEmpty(keyName))
+            {
+                return (new List<TRelationalTab1>(),
+                    new List<TRelationalTab2>());
+            }
+
+            var sql = $@"
+                SELECT * FROM {typeof(TRelationalTab1).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab2).Name} WHERE {keyName} IN @ids
+            ";
+            var reader = await this.GetMutipleAsync(sql, new { ids = ids });
+            var items1 = (await reader.ReadAsync<TRelationalTab1>()).AsList();
+            var items2 = (await reader.ReadAsync<TRelationalTab2>()).AsList();
+            return (items1, items2);
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>, List<TRelationalTab3>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3>(List<TKey> ids)
+        {
+            var keyName = typeof(TTable).GetPrimaryKeyName();
+            if (string.IsNullOrEmpty(keyName))
+            {
+                return (new List<TRelationalTab1>(),
+                    new List<TRelationalTab2>(),
+                    new List<TRelationalTab3>());
+            }
+
+            var sql = $@"
+                SELECT * FROM {typeof(TRelationalTab1).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab2).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab3).Name} WHERE {keyName} IN @ids
+            ";
+            var reader = await this.GetMutipleAsync(sql, new { ids = ids });
+            var items1 = (await reader.ReadAsync<TRelationalTab1>()).AsList();
+            var items2 = (await reader.ReadAsync<TRelationalTab2>()).AsList();
+            var items3 = (await reader.ReadAsync<TRelationalTab3>()).AsList();
+            return (items1, items2, items3);
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>, List<TRelationalTab3>, List<TRelationalTab4>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4>(List<TKey> ids)
+        {
+            var keyName = typeof(TTable).GetPrimaryKeyName();
+            if (string.IsNullOrEmpty(keyName))
+            {
+                return (new List<TRelationalTab1>(),
+                    new List<TRelationalTab2>(),
+                    new List<TRelationalTab3>(),
+                    new List<TRelationalTab4>());
+            }
+
+            var sql = $@"
+                SELECT * FROM {typeof(TRelationalTab1).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab2).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab3).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab4).Name} WHERE {keyName} IN @ids
+            ";
+            var reader = await this.GetMutipleAsync(sql, new { ids = ids });
+            var items1 = (await reader.ReadAsync<TRelationalTab1>()).AsList();
+            var items2 = (await reader.ReadAsync<TRelationalTab2>()).AsList();
+            var items3 = (await reader.ReadAsync<TRelationalTab3>()).AsList();
+            var items4 = (await reader.ReadAsync<TRelationalTab4>()).AsList();
+            return (items1, items2, items3, items4);
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>, List<TRelationalTab3>, List<TRelationalTab4>, List<TRelationalTab5>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4, TRelationalTab5>(List<TKey> ids)
+        {
+            var keyName = typeof(TTable).GetPrimaryKeyName();
+            if (string.IsNullOrEmpty(keyName))
+            {
+                return (new List<TRelationalTab1>(),
+                    new List<TRelationalTab2>(),
+                    new List<TRelationalTab3>(),
+                    new List<TRelationalTab4>(),
+                    new List<TRelationalTab5>());
+            }
+
+            var sql = $@"
+                SELECT * FROM {typeof(TRelationalTab1).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab2).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab3).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab4).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab5).Name} WHERE {keyName} IN @ids
+            ";
+            var reader = await this.GetMutipleAsync(sql, new { ids = ids });
+            var items1 = (await reader.ReadAsync<TRelationalTab1>()).AsList();
+            var items2 = (await reader.ReadAsync<TRelationalTab2>()).AsList();
+            var items3 = (await reader.ReadAsync<TRelationalTab3>()).AsList();
+            var items4 = (await reader.ReadAsync<TRelationalTab4>()).AsList();
+            var items5 = (await reader.ReadAsync<TRelationalTab5>()).AsList();
+            return (items1, items2, items3, items4, items5);
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>, List<TRelationalTab3>, List<TRelationalTab4>, List<TRelationalTab5>, List<TRelationalTab6>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4, TRelationalTab5, TRelationalTab6>(List<TKey> ids)
+        {
+            var keyName = typeof(TTable).GetPrimaryKeyName();
+            if (string.IsNullOrEmpty(keyName))
+            {
+                return (new List<TRelationalTab1>(),
+                    new List<TRelationalTab2>(),
+                    new List<TRelationalTab3>(),
+                    new List<TRelationalTab4>(),
+                    new List<TRelationalTab5>(),
+                    new List<TRelationalTab6>());
+            }
+
+            var sql = $@"
+                SELECT * FROM {typeof(TRelationalTab1).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab2).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab3).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab4).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab5).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab6).Name} WHERE {keyName} IN @ids
+            ";
+            var reader = await this.GetMutipleAsync(sql, new { ids = ids });
+            var items1 = (await reader.ReadAsync<TRelationalTab1>()).AsList();
+            var items2 = (await reader.ReadAsync<TRelationalTab2>()).AsList();
+            var items3 = (await reader.ReadAsync<TRelationalTab3>()).AsList();
+            var items4 = (await reader.ReadAsync<TRelationalTab4>()).AsList();
+            var items5 = (await reader.ReadAsync<TRelationalTab5>()).AsList();
+            var items6 = (await reader.ReadAsync<TRelationalTab6>()).AsList();
+            return (items1, items2, items3, items4, items5, items6);
+        }
+
+        public async Task<(List<TRelationalTab1>, List<TRelationalTab2>, List<TRelationalTab3>, List<TRelationalTab4>, List<TRelationalTab5>, List<TRelationalTab6>, List<TRelationalTab7>)> GetRelationalTablesAsync<TRelationalTab1, TRelationalTab2, TRelationalTab3, TRelationalTab4, TRelationalTab5, TRelationalTab6, TRelationalTab7>(List<TKey> ids)
+        {
+            var keyName = typeof(TTable).GetPrimaryKeyName();
+            if (string.IsNullOrEmpty(keyName))
+            {
+                return (new List<TRelationalTab1>(),
+                    new List<TRelationalTab2>(),
+                    new List<TRelationalTab3>(),
+                    new List<TRelationalTab4>(),
+                    new List<TRelationalTab5>(),
+                    new List<TRelationalTab6>(),
+                    new List<TRelationalTab7>());
+            }
+
+            var sql = $@"
+                SELECT * FROM {typeof(TRelationalTab1).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab2).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab3).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab4).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab5).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab6).Name} WHERE {keyName} IN @ids
+                SELECT * FROM {typeof(TRelationalTab7).Name} WHERE {keyName} IN @ids
+            ";
+            var reader = await this.GetMutipleAsync(sql, new { ids = ids });
+            var items1 = (await reader.ReadAsync<TRelationalTab1>()).AsList();
+            var items2 = (await reader.ReadAsync<TRelationalTab2>()).AsList();
+            var items3 = (await reader.ReadAsync<TRelationalTab3>()).AsList();
+            var items4 = (await reader.ReadAsync<TRelationalTab4>()).AsList();
+            var items5 = (await reader.ReadAsync<TRelationalTab5>()).AsList();
+            var items6 = (await reader.ReadAsync<TRelationalTab6>()).AsList();
+            var items7 = (await reader.ReadAsync<TRelationalTab7>()).AsList();
+            return (items1, items2, items3, items4, items5, items6, items7);
+        }
     }
 }

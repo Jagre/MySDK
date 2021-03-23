@@ -40,8 +40,18 @@ namespace MySDK.Dapper.Test
         {
             using (var repo = new ProductRepository())
             {
-                var prods = await repo.GetRelationalTablesAsync<Product, int, Product>(new List<int> { 1, 2, 3 });
+                var prods = await repo.GetRelationalTablesAsync<Product>(new List<int> { 1, 2, 3 });
                 Assert.True(prods.Count > 0);
+            }
+        }
+
+        [Fact]
+        public async Task Test_GetRelationalTablesAsync2_Ok()
+        {
+            using (var repo = new ProductRepository())
+            {
+                var prods = await repo.GetRelationalTablesAsync<Product, ProductStatus>(new List<int> { 1, 2, 3 });
+                Assert.True(prods.Item2.Count > 0);
             }
         }
     }
